@@ -3,6 +3,7 @@ package nl.bongers.sokoban.view.listener;
 import nl.bongers.sokoban.model.*;
 
 import java.awt.event.KeyEvent;
+import java.util.function.IntFunction;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -16,63 +17,19 @@ public class MovementKeyListener extends DefaultKeyListener {
         switch (keyEvent.getKeyCode()) {
             case VK_W:
             case VK_KP_UP:
-                if (scene[player.getRow() - 1][player.getColumn()] instanceof Cell) {
-                    scene[player.getRow()][player.getColumn()] = scene[player.getRow() - 1][player.getColumn()];
-                    player.setRow(player.getRow() - 1);
-                } else if (scene[player.getRow() - 1][player.getColumn()] instanceof Box && scene[player.getRow() - 2][player.getColumn()] instanceof Cell) {
-                    scene[player.getRow()][player.getColumn()] = scene[player.getRow() - 2][player.getColumn()];
-                    scene[player.getRow() - 2][player.getColumn()] = scene[player.getRow() - 1][player.getColumn()];
-                    player.setRow(player.getRow() - 1);
-                } else if (scene[player.getRow() - 1][player.getColumn()] instanceof Box && scene[player.getRow() - 2][player.getColumn()] instanceof Goal) {
-                    scene[player.getRow()][player.getColumn()] = new Cell(player.getRow(), player.getColumn());
-                    scene[player.getRow() - 2][player.getColumn()] = new GoalBox(player.getRow() - 1, player.getColumn());
-                    player.setRow(player.getRow() - 1);
-                }
+                move(player, scene, fr -> fr - 1, fc -> fc, sr -> sr - 2, sc -> sc);
                 break;
             case VK_D:
             case VK_KP_RIGHT:
-                if (scene[player.getRow()][player.getColumn() + 1] instanceof Cell) {
-                    scene[player.getRow()][player.getColumn()] = scene[player.getRow()][player.getColumn() + 1];
-                    player.setColumn(player.getColumn() + 1);
-                } else if (scene[player.getRow()][player.getColumn() + 1] instanceof Box && scene[player.getRow()][player.getColumn() + 2] instanceof Cell) {
-                    scene[player.getRow()][player.getColumn()] = scene[player.getRow()][player.getColumn() + 2];
-                    scene[player.getRow()][player.getColumn() + 2] = scene[player.getRow()][player.getColumn() + 1];
-                    player.setColumn(player.getColumn() + 1);
-                } else if (scene[player.getRow()][player.getColumn() + 1] instanceof Box && scene[player.getRow()][player.getColumn() + 2] instanceof Goal) {
-                    scene[player.getRow()][player.getColumn()] = new Cell(player.getRow(), player.getColumn());
-                    scene[player.getRow()][player.getColumn() + 2] = new GoalBox(player.getRow(), player.getColumn() + 1);
-                    player.setColumn(player.getColumn() + 1);
-                }
+                move(player, scene, fr -> fr, fc -> fc + 1, sr -> sr, sc -> sc + 2);
                 break;
             case VK_S:
             case VK_KP_DOWN:
-                if (scene[player.getRow() + 1][player.getColumn()] instanceof Cell) {
-                    scene[player.getRow()][player.getColumn()] = scene[player.getRow() + 1][player.getColumn()];
-                    player.setRow(player.getRow() + 1);
-                } else if (scene[player.getRow() + 1][player.getColumn()] instanceof Box && scene[player.getRow() + 2][player.getColumn()] instanceof Cell) {
-                    scene[player.getRow()][player.getColumn()] = scene[player.getRow() + 2][player.getColumn()];
-                    scene[player.getRow() + 2][player.getColumn()] = scene[player.getRow() + 1][player.getColumn()];
-                    player.setRow(player.getRow() + 1);
-                } else if (scene[player.getRow() + 1][player.getColumn()] instanceof Box && scene[player.getRow() + 2][player.getColumn()] instanceof Goal) {
-                    scene[player.getRow()][player.getColumn()] = new Cell(player.getRow(), player.getColumn());
-                    scene[player.getRow() + 2][player.getColumn()] = new GoalBox(player.getRow() + 1, player.getColumn());
-                    player.setRow(player.getRow() + 1);
-                }
+                move(player, scene, fr -> fr + 1, fc -> fc, sr -> sr + 2, sc -> sc);
                 break;
             case VK_A:
             case VK_KP_LEFT:
-                if (scene[player.getRow()][player.getColumn() - 1] instanceof Cell) {
-                    scene[player.getRow()][player.getColumn()] = scene[player.getRow()][player.getColumn() - 1];
-                    player.setColumn(player.getColumn() - 1);
-                } else if (scene[player.getRow()][player.getColumn() - 1] instanceof Box && scene[player.getRow()][player.getColumn() - 2] instanceof Cell) {
-                    scene[player.getRow()][player.getColumn()] = scene[player.getRow()][player.getColumn() - 2];
-                    scene[player.getRow()][player.getColumn() - 2] = scene[player.getRow()][player.getColumn() - 1];
-                    player.setColumn(player.getColumn() - 1);
-                } else if (scene[player.getRow()][player.getColumn() - 1] instanceof Box && scene[player.getRow()][player.getColumn() - 2] instanceof Goal) {
-                    scene[player.getRow()][player.getColumn()] = new Cell(player.getRow(), player.getColumn());
-                    scene[player.getRow()][player.getColumn() - 2] = new GoalBox(player.getRow(), player.getColumn() - 1);
-                    player.setColumn(player.getColumn() - 1);
-                }
+                move(player, scene, fr -> fr, fc -> fc - 1, sr -> sr, sc -> sc - 2);
                 break;
             default:
                 break;
@@ -80,5 +37,32 @@ public class MovementKeyListener extends DefaultKeyListener {
 
         scene[player.getRow()][player.getColumn()] = player;
         getScenePanel().repaint();
+    }
+
+    private void move(final Player player, final Object[][] scene, final IntFunction<Integer> row, final IntFunction<Integer> column, final IntFunction<Integer> nextRow, final IntFunction<Integer> nextColumn) {
+        final int currentRow = player.getRow();
+        final int currentColumn = player.getColumn();
+
+        final int toRow = row.apply(player.getRow());
+        final int toColumn = column.apply(player.getColumn());
+
+        final int secondRow = nextRow.apply(player.getRow());
+        final int secondColumn = nextColumn.apply(player.getColumn());
+
+        if (scene[toRow][toColumn] instanceof Cell) {
+            scene[currentRow][currentColumn] = scene[toRow][toColumn];
+            player.setRow(toRow);
+            player.setColumn(toColumn);
+        } else if (scene[toRow][toColumn] instanceof Box && scene[secondRow][secondColumn] instanceof Cell) {
+            scene[currentRow][currentColumn] = scene[secondRow][secondColumn];
+            scene[secondRow][secondColumn] = scene[toRow][toColumn];
+            player.setRow(toRow);
+            player.setColumn(toColumn);
+        } else if (scene[toRow][toColumn] instanceof Box && scene[secondRow][secondColumn] instanceof Goal) {
+            scene[currentRow][currentColumn] = new Cell(currentRow, currentColumn);
+            scene[secondRow][secondColumn] = new GoalBox(toRow, toColumn);
+            player.setRow(toRow);
+            player.setColumn(toColumn);
+        }
     }
 }
