@@ -19,7 +19,7 @@ public class GamePanel extends JPanel {
         add(scenePanel, BorderLayout.CENTER);
     }
 
-    public ScenePanel getScene() {
+    public ScenePanel getScenePanel() {
         return scenePanel;
     }
 }
