@@ -4,8 +4,8 @@ import java.util.Set;
 
 public interface Subscribable {
 
-    void handle(final Event<?> event);
+    void handle(final Event event);
 
-    Set<Class<? extends Event<?>>> subscribedEvents();
+    Set<Class<? extends Event>> subscribedEvents();
 
 }

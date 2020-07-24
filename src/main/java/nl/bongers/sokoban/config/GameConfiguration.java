@@ -2,11 +2,7 @@ package nl.bongers.sokoban.config;
 
 import java.awt.*;
 
-public final class GameConfiguration {
-
-    private GameConfiguration() {
-        // No-args
-    }
+public class GameConfiguration {
 
     public static final int ROWS = 30;
     public static final int COLUMNS = 30;

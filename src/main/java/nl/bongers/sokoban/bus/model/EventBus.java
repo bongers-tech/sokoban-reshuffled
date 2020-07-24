@@ -7,7 +7,7 @@ public interface EventBus {
 
     void register(final Subscribable subscribable);
 
-    void publish(final Event<?> event);
+    void publish(final Event event);
 
     List<Subscribable> getSubscribers();
 

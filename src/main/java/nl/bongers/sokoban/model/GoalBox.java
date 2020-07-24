@@ -5,6 +5,6 @@ import java.awt.*;
 public class GoalBox extends Item {
 
     public GoalBox(int row, int column) {
-        super(row, column, Color.GREEN);
+        super(row, column, Color.GREEN, "goal_box");
     }
 }

@@ -1,9 +1,9 @@
 package nl.bongers.sokoban.view.menu;
 
-import nl.bongers.sokoban.bus.event.PlaceholderEvent;
-import nl.bongers.sokoban.bus.model.Event;
 import nl.bongers.sokoban.bus.event.ExitGameEvent;
 import nl.bongers.sokoban.bus.event.NewGameEvent;
+import nl.bongers.sokoban.bus.event.PlaceholderEvent;
+import nl.bongers.sokoban.bus.model.Event;
 
 public enum MainMenuButton {
 
@@ -12,9 +12,9 @@ public enum MainMenuButton {
     EXIT_GAME("Exit", new ExitGameEvent());
 
     private final String buttonText;
-    private final Event<?> event;
+    private final Event event;
 
-    MainMenuButton(final String buttonText, final Event<?> event) {
+    MainMenuButton(final String buttonText, final Event event) {
         this.buttonText = buttonText;
         this.event = event;
     }
@@ -23,7 +23,7 @@ public enum MainMenuButton {
         return buttonText;
     }
 
-    public Event<?> getEvent() {
+    public Event getEvent() {
         return event;
     }
 }

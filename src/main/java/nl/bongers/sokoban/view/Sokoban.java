@@ -1,7 +1,7 @@
 package nl.bongers.sokoban.view;
 
+import nl.bongers.sokoban.view.listener.DefaultMouseListener;
 import nl.bongers.sokoban.view.listener.GameWindowListener;
-import nl.bongers.sokoban.view.listener.GraphicKeyListener;
 import nl.bongers.sokoban.view.listener.MenuKeyListener;
 import nl.bongers.sokoban.view.listener.MovementKeyListener;
 import nl.bongers.sokoban.view.menu.MainMenu;
@@ -12,13 +12,13 @@ import java.awt.*;
 import static java.util.Objects.isNull;
 import static nl.bongers.sokoban.config.GameConfiguration.PANEL_SIZE;
 
-public class GameFrame extends JFrame {
+public class Sokoban extends JFrame {
 
-    private static GameFrame gameFrame;
+    private static Sokoban sokoban;
     private final MainMenu mainMenu = new MainMenu();
     private GamePanel gamePanel;
 
-    private GameFrame() {
+    private Sokoban() {
         setTitle("Sokoban Reshuffled");
         setFocusable(true);
         setUndecorated(true);
@@ -34,18 +34,18 @@ public class GameFrame extends JFrame {
         setVisible(true);
     }
 
-    public static GameFrame getFrame() {
-        if (isNull(gameFrame)) {
-            gameFrame = new GameFrame();
+    public static Sokoban getFrame() {
+        if (isNull(sokoban)) {
+            sokoban = new Sokoban();
         }
-        return gameFrame;
+        return sokoban;
     }
 
     public void initializeListeners() {
         addWindowListener(new GameWindowListener());
         addKeyListener(new MovementKeyListener());
-        addKeyListener(new GraphicKeyListener());
         addKeyListener(new MenuKeyListener());
+        addMouseListener(new DefaultMouseListener());
     }
 
     public void toggleScene() {

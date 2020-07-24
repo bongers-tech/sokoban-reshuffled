@@ -5,6 +5,11 @@ import java.awt.*;
 public class Goal extends Item {
 
     public Goal(int row, int column) {
-        super(row, column, Color.YELLOW);
+        super(row, column, Color.YELLOW, "goal");
+    }
+
+    @Override
+    public String toString() {
+        return "$";
     }
 }

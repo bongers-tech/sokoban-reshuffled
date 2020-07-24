@@ -17,13 +17,18 @@ public final class SceneUtil {
         // No-args
     }
 
-    public static Object[][] readScene(final Player player) {
+
+    public static Object[][] readScene(final Player player, final String sceneName) {
+        return readScene(player, sceneName, ROWS, COLUMNS);
+    }
+
+    public static Object[][] readScene(final Player player, final String sceneName, final Integer rows, final Integer columns) {
         int currentRow = 0;
-        final Object[][] scene = new Object[ROWS][COLUMNS];
+        final Object[][] scene = new Object[rows][columns];
 
         try {
             final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            final InputStream inputStream = classloader.getResourceAsStream("sokoban_1.txt");
+            final InputStream inputStream = classloader.getResourceAsStream(sceneName + ".txt");
             final InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             final BufferedReader reader = new BufferedReader(streamReader);
             for (String line; (line = reader.readLine()) != null; ) {
@@ -37,6 +42,10 @@ public final class SceneUtil {
                         scene[currentRow][i] = new Goal(currentRow, i);
                     } else if (chars[i].equalsIgnoreCase("&")) {
                         scene[currentRow][i] = new Box(currentRow, i);
+                    } else if (chars[i].equalsIgnoreCase("0")) {
+                        scene[currentRow][i] = new Actual(currentRow, i);
+                    } else if (chars[i].equalsIgnoreCase("1")) {
+                        scene[currentRow][i] = new Done(currentRow, i);
                     } else {
                         scene[currentRow][i] = new Cell(currentRow, i);
                     }

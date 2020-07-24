@@ -29,7 +29,7 @@ public final class SimpleEventBus implements EventBus {
         subscribableList.add(subscribable);
     }
 
-    public void publish(final Event<?> event) {
+    public void publish(final Event event) {
         subscribableList
                 .stream()
                 .filter(s -> s.subscribedEvents().contains(event.getClass()))
