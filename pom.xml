@@ -6,7 +6,7 @@
 
     <groupId>nl.bongers</groupId>
     <artifactId>sokoban-reshuffled</artifactId>
-    <version>0.3.0</version>
+    <version>0.5.0</version>
     <build>
         <plugins>
             <plugin>

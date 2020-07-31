@@ -22,7 +22,7 @@ public abstract class Item {
 
         if (nonNull(imageFile)) {
             try {
-                this.image = ImageUtil.readImage(imageFile);
+                this.image = ImageUtil.getInstance().readImage(imageFile);
             } catch (IOException e) {
                 this.color = color;
             }
@@ -59,7 +59,7 @@ public abstract class Item {
 
     public void setImage(final String imageFile) {
         try {
-            this.image = ImageUtil.readImage(imageFile);
+            this.image = ImageUtil.getInstance().readImage(imageFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
