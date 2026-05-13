@@ -7,14 +7,10 @@ import nl.bongers.sokoban.model.*;
 import nl.bongers.sokoban.view.scene.ScenePanel;
 
 import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.awt.event.KeyEvent.*;
-import static java.util.Objects.nonNull;
+import static java.util.Objects.isNull;
 
 public class MoveEventListener implements Subscribable {
 
@@ -26,24 +22,10 @@ public class MoveEventListener implements Subscribable {
         final KeyEvent keyEvent = moveEvent.getKeyEvent();
 
         switch (keyEvent.getKeyCode()) {
-            case VK_W:
-            case VK_KP_UP:
-                move(scene, Move.NORTH);
-                break;
-            case VK_D:
-            case VK_KP_RIGHT:
-                move(scene, Move.EAST);
-                break;
-            case VK_S:
-            case VK_KP_DOWN:
-                move(scene, Move.SOUTH);
-                break;
-            case VK_A:
-            case VK_KP_LEFT:
-                move(scene, Move.WEST);
-                break;
-            default:
-                break;
+            case VK_W, VK_KP_UP -> move(scene, Move.NORTH);
+            case VK_D, VK_KP_RIGHT -> move(scene, Move.EAST);
+            case VK_S, VK_KP_DOWN -> move(scene, Move.SOUTH);
+            case VK_A, VK_KP_LEFT -> move(scene, Move.WEST);
         }
 
         scenePanel.repaint();
@@ -51,43 +33,42 @@ public class MoveEventListener implements Subscribable {
 
     @Override
     public Set<Class<? extends Event>> subscribedEvents() {
-        return Stream.of(MoveEvent.class).collect(Collectors.toCollection(HashSet::new));
+        return Set.of(MoveEvent.class);
     }
 
     private void move(final Scene scene, final Move move) {
         final Player player = scene.getPlayer();
-        final Object[][] grid = scene.getGrid();
-        final Map<String, Goal> goals = scene.getGoals();
+        final Tile[][] tiles = scene.getTiles();
+        final Entity[][] entities = scene.getEntities();
 
         final int currentRow = player.getRow();
         final int currentColumn = player.getColumn();
 
-        final int toRow = move.firstRow().apply(player.getRow());
-        final int toColumn = move.firstColumn().apply(player.getColumn());
+        final int targetRow = move.firstRow().apply(currentRow);
+        final int targetColumn = move.firstColumn().apply(currentColumn);
 
-        final int secondRow = move.secondRow().apply(player.getRow());
-        final int secondColumn = move.secondColumn().apply(player.getColumn());
+        final int boxTargetRow = move.secondRow().apply(currentRow);
+        final int boxTargetColumn = move.secondColumn().apply(currentColumn);
 
-        if (grid[toRow][toColumn] instanceof Cell || grid[toRow][toColumn] instanceof Goal) {
-            grid[currentRow][currentColumn] = new Cell(currentRow, currentColumn);
-            player.setRow(toRow);
-            player.setColumn(toColumn);
-        } else if (grid[toRow][toColumn] instanceof Box && grid[secondRow][secondColumn] instanceof Cell) {
-            grid[currentRow][currentColumn] = grid[secondRow][secondColumn];
-            grid[secondRow][secondColumn] = grid[toRow][toColumn];
-            player.setRow(toRow);
-            player.setColumn(toColumn);
-        } else if (grid[toRow][toColumn] instanceof Box && grid[secondRow][secondColumn] instanceof Goal) {
-            grid[currentRow][currentColumn] = new Cell(currentRow, currentColumn);
-            grid[secondRow][secondColumn] = new GoalBox(secondRow, secondColumn);
-            player.setRow(toRow);
-            player.setColumn(toColumn);
-            scene.getGoals().remove(secondRow + "" + secondColumn);
-        }
+        if (tiles[targetRow][targetColumn] != Tile.WALL) {
 
-        grid[player.getRow()][player.getColumn()] = player;
-        if (nonNull(goals.get(currentRow + "" + currentColumn)) && grid[currentRow][currentColumn] instanceof Cell) {
-            grid[currentRow][currentColumn] = new Goal(currentRow, currentColumn);
+            final Entity targetEntity = entities[targetRow][targetColumn];
+
+            if (isNull(targetEntity)) {
+                entities[currentRow][currentColumn] = null;
+                entities[targetRow][targetColumn] = player;
+                player.setPosition(targetRow, targetColumn);
+            } else if (targetEntity instanceof Box) {
+                if (tiles[boxTargetRow][boxTargetColumn] != Tile.WALL && isNull(entities[boxTargetRow][boxTargetColumn])) {
+                    entities[targetRow][targetColumn] = null;
+                    entities[boxTargetRow][boxTargetColumn] = targetEntity;
+                    targetEntity.setPosition(boxTargetRow, boxTargetColumn);
+
+                    entities[currentRow][currentColumn] = null;
+                    entities[targetRow][targetColumn] = player;
+                    player.setPosition(targetRow, targetColumn);
+                }
+            }
         }
     }
 }

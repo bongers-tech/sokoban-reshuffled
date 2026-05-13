@@ -1,42 +1,45 @@
 package nl.bongers.sokoban.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Scene {
 
     private final Player player;
-    private final Object[][] grid;
-    private final Map<String, Goal> goals;
+    private final Tile[][] tiles;
+    private final Entity[][] entities;
 
-    public Scene(final Player player, final Object[][] grid) {
+    public Scene(final Player player, final Tile[][] tiles, final Entity[][] entities) {
         this.player = player;
-        this.grid = grid;
-        this.goals = processGoals(grid);
+        this.tiles = tiles;
+        this.entities = entities;
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    public Object[][] getGrid() {
-        return grid;
+    public Tile[][] getTiles() {
+        return tiles;
     }
 
-    public Map<String, Goal> getGoals() {
-        return goals;
+    public Entity[][] getEntities() {
+        return entities;
     }
 
-    private Map<String, Goal> processGoals(final Object[][] grid) {
-        final Map<String, Goal> goalMap = new HashMap<>();
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid.length; j++) {
-                if (grid[i][j] instanceof Goal) {
-                    final Goal goal = (Goal) grid[i][j];
-                    goalMap.putIfAbsent(goal.getRow() + "" + goal.getColumn(), goal);
+    public Tile getTile(final int row, final int col) {
+        return tiles[row][col];
+    }
+
+    public Entity getEntity(final int row, final int col) {
+        return entities[row][col];
+    }
+
+    public boolean isCleared() {
+        for (int row = 0; row < tiles.length; row++) {
+            for (int column = 0; column < tiles[row].length; column++) {
+                if (tiles[row][column] == Tile.GOAL && !(entities[row][column] instanceof Box)) {
+                    return false;
                 }
             }
         }
-        return goalMap;
+        return true;
     }
 }

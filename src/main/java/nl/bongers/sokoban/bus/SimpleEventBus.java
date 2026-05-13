@@ -7,11 +7,9 @@ import nl.bongers.sokoban.bus.model.Subscribable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Objects.isNull;
-
 public final class SimpleEventBus implements EventBus {
 
-    private static SimpleEventBus eventBus;
+    private static final SimpleEventBus EVENT_BUS = new SimpleEventBus();
     private final List<Subscribable> subscribableList = new ArrayList<>();
 
     private SimpleEventBus() {
@@ -19,10 +17,7 @@ public final class SimpleEventBus implements EventBus {
     }
 
     public static SimpleEventBus getBus() {
-        if (isNull(eventBus)) {
-            eventBus = new SimpleEventBus();
-        }
-        return eventBus;
+        return EVENT_BUS;
     }
 
     public void register(final Subscribable subscribable) {

@@ -1,8 +1,9 @@
 package nl.bongers.sokoban.view.scene;
 
-import nl.bongers.sokoban.model.Item;
-import nl.bongers.sokoban.model.Player;
+import nl.bongers.sokoban.model.Entity;
 import nl.bongers.sokoban.model.Scene;
+import nl.bongers.sokoban.model.Tile;
+import nl.bongers.sokoban.util.ImageUtil;
 import nl.bongers.sokoban.util.SceneUtil;
 
 import javax.swing.*;
@@ -17,11 +18,10 @@ public class ScenePanel extends JPanel {
     private int currentScene = 1;
 
     public ScenePanel() {
-        final Player player = new Player(0, 0);
-        this.scene = new Scene(player, SceneUtil.readScene(player, "scene_" + currentScene));
+        this.scene = SceneUtil.readScene("scene_" + currentScene);
 
         setBackground(Color.WHITE);
-        setSize(PANEL_SIZE);
+        setPreferredSize(PANEL_SIZE);
         requestFocus();
     }
 
@@ -38,34 +38,54 @@ public class ScenePanel extends JPanel {
     }
 
     private void checkSceneCleared() {
-        if (scene.getGoals().isEmpty()) {
-            this.scene = new Scene(scene.getPlayer(), SceneUtil.readScene(scene.getPlayer(), "scene_" + ++currentScene));
+        if (scene.isCleared()) {
+            this.scene = SceneUtil.readScene("scene_" + ++currentScene);
         }
     }
 
     private void drawGrid(final Graphics graphics) {
-        if (DRAW_GRID) {
-            graphics.setColor(Color.LIGHT_GRAY);
-            for (int row = 0; row < ROWS; row++) {
-                for (int column = 0; column < COLUMNS; column++) {
-                    graphics.drawRect(column * POINTS_PER_SQUARE, row * POINTS_PER_SQUARE, POINTS_PER_SQUARE, POINTS_PER_SQUARE);
-                }
+        graphics.setColor(Color.LIGHT_GRAY);
+        for (int row = 0; row < ROWS; row++) {
+            for (int column = 0; column < COLUMNS; column++) {
+                graphics.drawRect(column * POINTS_PER_SQUARE, row * POINTS_PER_SQUARE, POINTS_PER_SQUARE, POINTS_PER_SQUARE);
             }
         }
     }
 
     private void drawScene(final Graphics graphics) {
-        final Object[][] grid = scene.getGrid();
-        for (int row = 0; row < grid.length; row++) {
-            for (int column = 0; column < grid.length; column++) {
-                final Item item = (Item) grid[row][column];
-                if (nonNull(item)) {
-                    final Graphics2D graphics2D = (Graphics2D) graphics;
-                    graphics2D.clearRect(column * POINTS_PER_SQUARE, row * POINTS_PER_SQUARE, POINTS_PER_SQUARE, POINTS_PER_SQUARE);
-                    if (nonNull(item.getImage())) {
-                        graphics2D.drawImage(item.getImage(), item.getColumn() * POINTS_PER_SQUARE, item.getRow() * POINTS_PER_SQUARE, null);
-                    } else if (nonNull(item.getColor())) {
-                        graphics.setColor(item.getColor());
+        final Graphics2D graphics2D = (Graphics2D) graphics;
+        drawTiles(graphics2D);
+        drawEntities(graphics2D);
+    }
+
+    private void drawTiles(final Graphics2D graphics2D) {
+        final Tile[][] tiles = scene.getTiles();
+
+        for (int row = 0; row < tiles.length; row++) {
+            for (int column = 0; column < tiles[row].length; column++) {
+                final Tile tile = tiles[row][column];
+                if (nonNull(tile)) {
+                    if (nonNull(tile.getImageName())) {
+                        final Image image = ImageUtil.getInstance().readImage(tile.getImageName());
+                        graphics2D.drawImage(image, column * POINTS_PER_SQUARE, row * POINTS_PER_SQUARE, null);
+                    }
+                }
+            }
+        }
+    }
+
+    private void drawEntities(final Graphics2D graphics2D) {
+        final Entity[][] entities = scene.getEntities();
+
+        for (int row = 0; row < entities.length; row++) {
+            for (int column = 0; column < entities[row].length; column++) {
+                final Entity entity = entities[row][column];
+                if (nonNull(entity)) {
+                    if (nonNull(entity.getImageName())) {
+                        final Image image = ImageUtil.getInstance().readImage(entity.getImageName());
+                        graphics2D.drawImage(image, column * POINTS_PER_SQUARE, row * POINTS_PER_SQUARE, null);
+                    } else if (nonNull(entity.getColor())) {
+                        graphics2D.setColor(entity.getColor());
                         graphics2D.fillRect(column * POINTS_PER_SQUARE, row * POINTS_PER_SQUARE, POINTS_PER_SQUARE, POINTS_PER_SQUARE);
                     }
                 }

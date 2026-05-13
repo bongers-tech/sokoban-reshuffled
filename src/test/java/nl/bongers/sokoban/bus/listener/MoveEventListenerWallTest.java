@@ -3,7 +3,7 @@ package nl.bongers.sokoban.bus.listener;
 import nl.bongers.sokoban.bus.event.MoveEvent;
 import nl.bongers.sokoban.model.Player;
 import nl.bongers.sokoban.model.Scene;
-import nl.bongers.sokoban.model.Wall;
+import nl.bongers.sokoban.model.Tile;
 import nl.bongers.sokoban.util.SceneUtil;
 import nl.bongers.sokoban.view.scene.ScenePanel;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +17,7 @@ import static org.mockito.Mockito.when;
 
 class MoveEventListenerWallTest {
 
-    private Player player;
-    private Object[][] grid;
+    private Scene scene;
 
     private ScenePanel scenePanel;
     private KeyEvent keyEvent;
@@ -26,8 +25,7 @@ class MoveEventListenerWallTest {
 
     @BeforeEach
     void setUp() {
-        player = new Player(0, 0);
-        grid = SceneUtil.readScene(player, "scene_wall");
+        scene = SceneUtil.readScene("scene_wall");
 
         scenePanel = mock(ScenePanel.class);
         keyEvent = mock(KeyEvent.class);
@@ -36,67 +34,63 @@ class MoveEventListenerWallTest {
 
     @Test
     void testMovePlayerUpToWall() {
-        final Scene scene = new Scene(player, grid);
         final MoveEvent event = new MoveEvent(scenePanel, keyEvent);
 
         when(scenePanel.getScene()).thenReturn(scene);
         when(keyEvent.getKeyCode()).thenReturn(KeyEvent.VK_W);
 
-        assertThat(player.getRow()).isEqualTo(1);
-        assertThat(player.getColumn()).isEqualTo(1);
-        assertThat(grid[0][1]).isInstanceOf(Wall.class);
-        assertThat(grid[1][1]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(1);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(1);
+        assertThat(scene.getTile(0, 1)).isEqualTo(Tile.WALL);
+        assertThat(scene.getEntity(1, 1)).isInstanceOf(Player.class);
 
         eventListener.handle(event);
 
-        assertThat(player.getRow()).isEqualTo(1);
-        assertThat(player.getColumn()).isEqualTo(1);
-        assertThat(grid[0][1]).isInstanceOf(Wall.class);
-        assertThat(grid[1][1]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(1);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(1);
+        assertThat(scene.getTile(0, 1)).isEqualTo(Tile.WALL);
+        assertThat(scene.getEntity(1, 1)).isInstanceOf(Player.class);
     }
 
     @Test
     void testMovePlayerRightToWall() {
-        final Scene scene = new Scene(player, grid);
         final MoveEvent event = new MoveEvent(scenePanel, keyEvent);
 
         when(scenePanel.getScene()).thenReturn(scene);
         when(keyEvent.getKeyCode()).thenReturn(KeyEvent.VK_D);
 
         eventListener.handle(event);
-        assertThat(player.getRow()).isEqualTo(1);
-        assertThat(player.getColumn()).isEqualTo(1);
-        assertThat(grid[0][1]).isInstanceOf(Wall.class);
-        assertThat(grid[1][1]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(1);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(1);
+        assertThat(scene.getTile(0, 1)).isEqualTo(Tile.WALL);
+        assertThat(scene.getEntity(1, 1)).isInstanceOf(Player.class);
     }
 
     @Test
     void testMovePlayerDownToWall() {
-        final Scene scene = new Scene(player, grid);
         final MoveEvent event = new MoveEvent(scenePanel, keyEvent);
 
         when(scenePanel.getScene()).thenReturn(scene);
         when(keyEvent.getKeyCode()).thenReturn(KeyEvent.VK_S);
 
         eventListener.handle(event);
-        assertThat(player.getRow()).isEqualTo(1);
-        assertThat(player.getColumn()).isEqualTo(1);
-        assertThat(grid[0][1]).isInstanceOf(Wall.class);
-        assertThat(grid[1][1]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(1);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(1);
+        assertThat(scene.getTile(0, 1)).isEqualTo(Tile.WALL);
+        assertThat(scene.getEntity(1, 1)).isInstanceOf(Player.class);
     }
 
     @Test
     void testMovePlayerLeftToWall() {
-        final Scene scene = new Scene(player, grid);
         final MoveEvent event = new MoveEvent(scenePanel, keyEvent);
 
         when(scenePanel.getScene()).thenReturn(scene);
         when(keyEvent.getKeyCode()).thenReturn(KeyEvent.VK_A);
 
         eventListener.handle(event);
-        assertThat(player.getRow()).isEqualTo(1);
-        assertThat(player.getColumn()).isEqualTo(1);
-        assertThat(grid[0][1]).isInstanceOf(Wall.class);
-        assertThat(grid[1][1]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(1);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(1);
+        assertThat(scene.getTile(0, 1)).isEqualTo(Tile.WALL);
+        assertThat(scene.getEntity(1, 1)).isInstanceOf(Player.class);
     }
 }

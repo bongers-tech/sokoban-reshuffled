@@ -17,8 +17,7 @@ import static org.mockito.Mockito.when;
 
 class MoveEventListenerBoxAndBoxTest {
 
-    private Player player;
-    private Object[][] grid;
+    private Scene scene;
 
     private ScenePanel scenePanel;
     private KeyEvent keyEvent;
@@ -26,8 +25,7 @@ class MoveEventListenerBoxAndBoxTest {
 
     @BeforeEach
     void setUp() {
-        player = new Player(0, 0);
-        grid = SceneUtil.readScene(player, "scene_box_box");
+        scene = SceneUtil.readScene("scene_box_box");
 
         scenePanel = mock(ScenePanel.class);
         keyEvent = mock(KeyEvent.class);
@@ -36,93 +34,91 @@ class MoveEventListenerBoxAndBoxTest {
 
     @Test
     void testMovePlayerUpToBoxAndBoxToBox() {
-        final Scene scene = new Scene(player, grid);
         final MoveEvent event = new MoveEvent(scenePanel, keyEvent);
 
         when(scenePanel.getScene()).thenReturn(scene);
         when(keyEvent.getKeyCode()).thenReturn(KeyEvent.VK_W);
 
-        assertThat(player.getRow()).isEqualTo(3);
-        assertThat(player.getColumn()).isEqualTo(3);
-        assertThat(grid[1][3]).isInstanceOf(Box.class);
-        assertThat(grid[2][3]).isInstanceOf(Box.class);
-        assertThat(grid[3][3]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(3);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(3);
+        assertThat(scene.getEntity(1, 3)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(2, 3)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 3)).isInstanceOf(Player.class);
 
         eventListener.handle(event);
 
-        assertThat(player.getRow()).isEqualTo(3);
-        assertThat(player.getColumn()).isEqualTo(3);
-        assertThat(grid[1][3]).isInstanceOf(Box.class);
-        assertThat(grid[2][3]).isInstanceOf(Box.class);
-        assertThat(grid[3][3]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(3);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(3);
+        assertThat(scene.getEntity(1, 3)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(2, 3)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 3)).isInstanceOf(Player.class);
     }
 
     @Test
     void testMovePlayerRightToBoxAndBoxToBox() {
-        final Scene scene = new Scene(player, grid);
         final MoveEvent event = new MoveEvent(scenePanel, keyEvent);
 
         when(scenePanel.getScene()).thenReturn(scene);
         when(keyEvent.getKeyCode()).thenReturn(KeyEvent.VK_D);
 
-        assertThat(player.getRow()).isEqualTo(3);
-        assertThat(player.getColumn()).isEqualTo(3);
-        assertThat(grid[3][5]).isInstanceOf(Box.class);
-        assertThat(grid[3][4]).isInstanceOf(Box.class);
-        assertThat(grid[3][3]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(3);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(3);
+        assertThat(scene.getEntity(3, 5)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 4)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 3)).isInstanceOf(Player.class);
 
         eventListener.handle(event);
 
-        assertThat(player.getRow()).isEqualTo(3);
-        assertThat(player.getColumn()).isEqualTo(3);
-        assertThat(grid[3][5]).isInstanceOf(Box.class);
-        assertThat(grid[3][4]).isInstanceOf(Box.class);
-        assertThat(grid[3][3]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(3);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(3);
+        assertThat(scene.getEntity(3, 5)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 4)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 3)).isInstanceOf(Player.class);
     }
 
     @Test
     void testMovePlayerDownToBoxAndBoxToBox() {
-        final Scene scene = new Scene(player, grid);
+        final Scene scene = SceneUtil.readScene("scene_box_box");
         final MoveEvent event = new MoveEvent(scenePanel, keyEvent);
 
         when(scenePanel.getScene()).thenReturn(scene);
         when(keyEvent.getKeyCode()).thenReturn(KeyEvent.VK_S);
 
-        assertThat(player.getRow()).isEqualTo(3);
-        assertThat(player.getColumn()).isEqualTo(3);
-        assertThat(grid[5][3]).isInstanceOf(Box.class);
-        assertThat(grid[4][3]).isInstanceOf(Box.class);
-        assertThat(grid[3][3]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(3);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(3);
+        assertThat(scene.getEntity(5, 3)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(4, 3)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 3)).isInstanceOf(Player.class);
 
         eventListener.handle(event);
 
-        assertThat(player.getRow()).isEqualTo(3);
-        assertThat(player.getColumn()).isEqualTo(3);
-        assertThat(grid[5][3]).isInstanceOf(Box.class);
-        assertThat(grid[4][3]).isInstanceOf(Box.class);
-        assertThat(grid[3][3]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(3);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(3);
+        assertThat(scene.getEntity(5, 3)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(4, 3)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 3)).isInstanceOf(Player.class);
     }
 
     @Test
     void testMovePlayerLeftToBoxAndBoxToBox() {
-        final Scene scene = new Scene(player, grid);
+        final Scene scene = SceneUtil.readScene("scene_box_box");
         final MoveEvent event = new MoveEvent(scenePanel, keyEvent);
 
         when(scenePanel.getScene()).thenReturn(scene);
         when(keyEvent.getKeyCode()).thenReturn(KeyEvent.VK_A);
 
-        assertThat(player.getRow()).isEqualTo(3);
-        assertThat(player.getColumn()).isEqualTo(3);
-        assertThat(grid[3][1]).isInstanceOf(Box.class);
-        assertThat(grid[3][2]).isInstanceOf(Box.class);
-        assertThat(grid[3][3]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(3);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(3);
+        assertThat(scene.getEntity(3, 1)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 2)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 3)).isInstanceOf(Player.class);
 
         eventListener.handle(event);
 
-        assertThat(player.getRow()).isEqualTo(3);
-        assertThat(player.getColumn()).isEqualTo(3);
-        assertThat(grid[3][1]).isInstanceOf(Box.class);
-        assertThat(grid[3][2]).isInstanceOf(Box.class);
-        assertThat(grid[3][3]).isInstanceOf(Player.class);
+        assertThat(scene.getPlayer().getRow()).isEqualTo(3);
+        assertThat(scene.getPlayer().getColumn()).isEqualTo(3);
+        assertThat(scene.getEntity(3, 1)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 2)).isInstanceOf(Box.class);
+        assertThat(scene.getEntity(3, 3)).isInstanceOf(Player.class);
     }
 }

@@ -14,7 +14,7 @@ import static nl.bongers.sokoban.config.GameConfiguration.PANEL_SIZE;
 
 public class Sokoban extends JFrame {
 
-    private static Sokoban sokoban;
+    private static final Sokoban SOKOBAN = new Sokoban();
     private final MainMenu mainMenu = new MainMenu();
     private GamePanel gamePanel;
 
@@ -35,10 +35,7 @@ public class Sokoban extends JFrame {
     }
 
     public static Sokoban getFrame() {
-        if (isNull(sokoban)) {
-            sokoban = new Sokoban();
-        }
-        return sokoban;
+        return SOKOBAN;
     }
 
     public void initializeListeners() {

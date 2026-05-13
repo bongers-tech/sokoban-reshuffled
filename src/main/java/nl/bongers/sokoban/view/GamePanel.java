@@ -14,7 +14,7 @@ public class GamePanel extends JPanel {
     public GamePanel() {
         this.scenePanel = new ScenePanel();
 
-        setSize(PANEL_SIZE);
+        setPreferredSize(PANEL_SIZE);
         setLayout(new BorderLayout());
         add(scenePanel, BorderLayout.CENTER);
     }

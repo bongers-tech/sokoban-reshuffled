@@ -6,10 +6,7 @@ import nl.bongers.sokoban.bus.model.Event;
 import nl.bongers.sokoban.bus.model.Subscribable;
 import nl.bongers.sokoban.view.Sokoban;
 
-import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TogglePanelEventListener implements Subscribable {
 
@@ -23,6 +20,6 @@ public class TogglePanelEventListener implements Subscribable {
 
     @Override
     public Set<Class<? extends Event>> subscribedEvents() {
-        return Stream.of(NewGameEvent.class, MainMenuEvent.class).collect(Collectors.toCollection(HashSet::new));
+        return Set.of(NewGameEvent.class, MainMenuEvent.class);
     }
 }

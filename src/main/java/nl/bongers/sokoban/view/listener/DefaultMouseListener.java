@@ -1,9 +1,9 @@
 package nl.bongers.sokoban.view.listener;
 
 import nl.bongers.sokoban.model.Box;
-import nl.bongers.sokoban.model.Cell;
-import nl.bongers.sokoban.model.Goal;
-import nl.bongers.sokoban.model.GoalBox;
+import nl.bongers.sokoban.model.Entity;
+import nl.bongers.sokoban.model.Scene;
+import nl.bongers.sokoban.model.Tile;
 import nl.bongers.sokoban.view.Sokoban;
 
 import java.awt.event.MouseEvent;
@@ -18,35 +18,25 @@ public class DefaultMouseListener implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        final Object[][] grid = Sokoban.getFrame().getGame().getScenePanel().getScene().getGrid();
-        final Object item = grid[e.getY() / POINTS_PER_SQUARE][e.getX() / POINTS_PER_SQUARE];
+        final Scene scene = Sokoban.getFrame().getGame().getScenePanel().getScene();
+        final Tile[][] tiles = scene.getTiles();
+        final Entity[][] entities = scene.getEntities();
 
-        if (item instanceof Box) {
-            selectedBox = (Box) item;
-        } else if (nonNull(selectedBox) && item instanceof Cell) {
-            final int row = ((Cell) item).getRow();
-            final int column = ((Cell) item).getColumn();
+        final int row = e.getY() / POINTS_PER_SQUARE;
+        final int column = e.getX() / POINTS_PER_SQUARE;
 
-            grid[selectedBox.getRow()][selectedBox.getColumn()] = new Cell(selectedBox.getRow(), selectedBox.getColumn());
-            grid[row][column] = selectedBox;
-            selectedBox.setRow(row);
-            selectedBox.setColumn(column);
+        final Tile tile = tiles[row][column];
+        final Entity entity = entities[row][column];
+
+        if (entity instanceof Box) {
+            selectedBox = (Box) entity;
+        } else if (nonNull(selectedBox) && !Tile.WALL.equals(tile)) {
+            entities[selectedBox.getRow()][selectedBox.getColumn()] = null;
+            entities[row][column] = selectedBox;
+            selectedBox.setPosition(row, column);
             selectedBox = null;
 
-            Sokoban.getFrame().getGame().getScenePanel().getScene().getGoals().remove(row + "" + column);
             Sokoban.getFrame().getGame().getScenePanel().repaint();
-
-        } else if (nonNull(selectedBox) && item instanceof Goal) {
-            final int row = ((Goal) item).getRow();
-            final int column = ((Goal) item).getColumn();
-
-            grid[selectedBox.getRow()][selectedBox.getColumn()] = new Cell(selectedBox.getRow(), selectedBox.getColumn());
-            grid[row][column] = new GoalBox(row, column);
-            selectedBox = null;
-
-            Sokoban.getFrame().getGame().getScenePanel().getScene().getGoals().remove(row + "" + column);
-            Sokoban.getFrame().getGame().getScenePanel().repaint();
-
         }
     }
 

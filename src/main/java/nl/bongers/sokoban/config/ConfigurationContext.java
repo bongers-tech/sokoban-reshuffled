@@ -1,6 +1,5 @@
 package nl.bongers.sokoban.config;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class ConfigurationContext {
@@ -10,8 +9,6 @@ public final class ConfigurationContext {
     }
 
     public static List<Configuration> getConfigurations() {
-        return Arrays.asList(
-                new EventBusConfiguration()
-        );
+        return List.of(new EventBusConfiguration());
     }
 }

@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-import static java.awt.Label.LEFT;
 import static nl.bongers.sokoban.util.ButtonUtil.createButton;
 
 public class MainMenu extends JPanel {
@@ -34,7 +33,7 @@ public class MainMenu extends JPanel {
     }
 
     private void initializeCredits() {
-        final Label label = new Label("2020 - JAN BONGERS");
+        final Label label = new Label("2026 - JAN BONGERS");
         label.setForeground(Color.WHITE);
         label.setBackground(Color.GRAY);
         label.setAlignment(Label.CENTER);
