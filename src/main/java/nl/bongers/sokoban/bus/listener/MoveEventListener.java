@@ -27,7 +27,8 @@ public class MoveEventListener implements Subscribable {
             case VK_S, VK_KP_DOWN -> move(scene, Move.SOUTH);
             case VK_A, VK_KP_LEFT -> move(scene, Move.WEST);
         }
-
+        scenePanel.getGameState().pushToHistory();
+        scenePanel.getGameState().checkSceneCleared();
         scenePanel.repaint();
     }
 
@@ -37,9 +38,9 @@ public class MoveEventListener implements Subscribable {
     }
 
     private void move(final Scene scene, final Move move) {
-        final Player player = scene.getPlayer();
-        final Tile[][] tiles = scene.getTiles();
-        final Entity[][] entities = scene.getEntities();
+        final Player player = scene.player();
+        final Tile[][] tiles = scene.tiles();
+        final Entity[][] entities = scene.entities();
 
         final int currentRow = player.getRow();
         final int currentColumn = player.getColumn();

@@ -1,10 +1,10 @@
 package nl.bongers.sokoban.view.scene;
 
 import nl.bongers.sokoban.model.Entity;
+import nl.bongers.sokoban.model.GameState;
 import nl.bongers.sokoban.model.Scene;
 import nl.bongers.sokoban.model.Tile;
 import nl.bongers.sokoban.util.ImageUtil;
-import nl.bongers.sokoban.util.SceneUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,33 +14,27 @@ import static nl.bongers.sokoban.config.GameConfiguration.*;
 
 public class ScenePanel extends JPanel {
 
-    private Scene scene;
-    private int currentScene = 1;
+    private final GameState gameState = new GameState();
 
     public ScenePanel() {
-        this.scene = SceneUtil.readScene("scene_" + currentScene);
-
         setBackground(Color.WHITE);
         setPreferredSize(PANEL_SIZE);
         requestFocus();
     }
 
+    public GameState getGameState() {
+        return gameState;
+    }
+
     public Scene getScene() {
-        return scene;
+        return gameState.getScene();
     }
 
     @Override
     protected void paintComponent(final Graphics graphics) {
         super.paintComponent(graphics);
-        checkSceneCleared();
         drawScene(graphics);
         drawGrid(graphics);
-    }
-
-    private void checkSceneCleared() {
-        if (scene.isCleared()) {
-            this.scene = SceneUtil.readScene("scene_" + ++currentScene);
-        }
     }
 
     private void drawGrid(final Graphics graphics) {
@@ -59,7 +53,7 @@ public class ScenePanel extends JPanel {
     }
 
     private void drawTiles(final Graphics2D graphics2D) {
-        final Tile[][] tiles = scene.getTiles();
+        final Tile[][] tiles = getScene().tiles();
 
         for (int row = 0; row < tiles.length; row++) {
             for (int column = 0; column < tiles[row].length; column++) {
@@ -75,7 +69,7 @@ public class ScenePanel extends JPanel {
     }
 
     private void drawEntities(final Graphics2D graphics2D) {
-        final Entity[][] entities = scene.getEntities();
+        final Entity[][] entities = getScene().entities();
 
         for (int row = 0; row < entities.length; row++) {
             for (int column = 0; column < entities[row].length; column++) {

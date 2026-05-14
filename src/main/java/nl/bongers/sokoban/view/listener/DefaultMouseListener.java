@@ -19,8 +19,8 @@ public class DefaultMouseListener implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         final Scene scene = Sokoban.getFrame().getGame().getScenePanel().getScene();
-        final Tile[][] tiles = scene.getTiles();
-        final Entity[][] entities = scene.getEntities();
+        final Tile[][] tiles = scene.tiles();
+        final Entity[][] entities = scene.entities();
 
         final int row = e.getY() / POINTS_PER_SQUARE;
         final int column = e.getX() / POINTS_PER_SQUARE;

@@ -1,9 +1,6 @@
 package nl.bongers.sokoban.view;
 
-import nl.bongers.sokoban.view.listener.DefaultMouseListener;
-import nl.bongers.sokoban.view.listener.GameWindowListener;
-import nl.bongers.sokoban.view.listener.MenuKeyListener;
-import nl.bongers.sokoban.view.listener.MovementKeyListener;
+import nl.bongers.sokoban.view.listener.*;
 import nl.bongers.sokoban.view.menu.MainMenu;
 
 import javax.swing.*;
@@ -42,7 +39,9 @@ public class Sokoban extends JFrame {
         addWindowListener(new GameWindowListener());
         addKeyListener(new MovementKeyListener());
         addKeyListener(new MenuKeyListener());
+        addKeyListener(new GameActionKeyListener());
         addMouseListener(new DefaultMouseListener());
+
     }
 
     public void toggleScene() {

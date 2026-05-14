@@ -19,7 +19,7 @@ public class GraphicEventListener implements Subscribable {
         final MoveEvent moveEvent = (MoveEvent) event;
         final KeyEvent keyEvent = moveEvent.getKeyEvent();
         final ScenePanel scenePanel = moveEvent.getScenePanel();
-        final Player player = scenePanel.getScene().getPlayer();
+        final Player player = scenePanel.getScene().player();
 
         switch (keyEvent.getKeyCode()) {
             case VK_W, VK_KP_UP -> player.setDirection(Direction.UP);
