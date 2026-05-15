@@ -8,7 +8,6 @@ import nl.bongers.sokoban.model.Player;
 import nl.bongers.sokoban.view.scene.ScenePanel;
 
 import java.awt.event.KeyEvent;
-import java.util.Set;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -32,7 +31,7 @@ public class GraphicEventListener implements Subscribable {
     }
 
     @Override
-    public Set<Class<? extends Event>> subscribedEvents() {
-        return Set.of(MoveEvent.class);
+    public Class<? extends Event> subscribedEvent() {
+        return MoveEvent.class;
     }
 }

@@ -9,6 +9,6 @@ public final class ConfigurationContext {
     }
 
     public static List<Configuration> getConfigurations() {
-        return List.of(new EventBusConfiguration());
+        return List.of(new EventBusConfiguration(), new KeyBindingConfiguration());
     }
 }

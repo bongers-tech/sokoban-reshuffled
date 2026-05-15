@@ -7,7 +7,6 @@ import nl.bongers.sokoban.model.*;
 import nl.bongers.sokoban.view.scene.ScenePanel;
 
 import java.awt.event.KeyEvent;
-import java.util.Set;
 
 import static java.awt.event.KeyEvent.*;
 import static java.util.Objects.isNull;
@@ -33,8 +32,8 @@ public class MoveEventListener implements Subscribable {
     }
 
     @Override
-    public Set<Class<? extends Event>> subscribedEvents() {
-        return Set.of(MoveEvent.class);
+    public Class<? extends Event> subscribedEvent() {
+        return MoveEvent.class;
     }
 
     private void move(final Scene scene, final Move move) {

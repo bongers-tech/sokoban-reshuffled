@@ -2,9 +2,13 @@ package nl.bongers.sokoban.view;
 
 import nl.bongers.sokoban.view.listener.*;
 import nl.bongers.sokoban.view.menu.MainMenu;
+import nl.bongers.sokoban.view.menu.OptionsMenu;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.util.List;
 
 import static java.util.Objects.isNull;
 import static nl.bongers.sokoban.config.GameConfiguration.PANEL_SIZE;
@@ -12,7 +16,11 @@ import static nl.bongers.sokoban.config.GameConfiguration.PANEL_SIZE;
 public class Sokoban extends JFrame {
 
     private static final Sokoban SOKOBAN = new Sokoban();
+
     private final MainMenu mainMenu = new MainMenu();
+    private final OptionsMenu optionsMenu = new OptionsMenu();
+    private final JPanel screens = new JPanel(new CardLayout());
+
     private GamePanel gamePanel;
 
     private Sokoban() {
@@ -24,10 +32,14 @@ public class Sokoban extends JFrame {
         setLayout(new BorderLayout());
         setLocationRelativeTo(this);
 
-        add(mainMenu, BorderLayout.CENTER);
-        mainMenu.setVisible(true);
-        mainMenu.requestFocus();
+        initializeKeyListeners(mainMenu, List.of(new MenuKeyListener()));
+        initializeKeyListeners(optionsMenu, List.of(new MenuKeyListener()));
 
+        screens.add(mainMenu, "mainMenu");
+        screens.add(optionsMenu, "optionsMenu");
+        add(screens, BorderLayout.CENTER);
+
+        showMainMenu();
         setVisible(true);
     }
 
@@ -35,29 +47,47 @@ public class Sokoban extends JFrame {
         return SOKOBAN;
     }
 
-    public void initializeListeners() {
-        addWindowListener(new GameWindowListener());
-        addKeyListener(new MovementKeyListener());
-        addKeyListener(new MenuKeyListener());
-        addKeyListener(new GameActionKeyListener());
-        addMouseListener(new DefaultMouseListener());
-
-    }
-
-    public void toggleScene() {
-        if (isNull(gamePanel)) {
-            gamePanel = new GamePanel();
-            gamePanel.setVisible(false);
-            add(gamePanel, BorderLayout.CENTER);
-        }
-        gamePanel.setVisible(!gamePanel.isShowing());
-    }
-
-    public void toggleMenu() {
-        mainMenu.setVisible(!mainMenu.isShowing());
-    }
-
     public GamePanel getGame() {
         return gamePanel;
+    }
+
+    public void initialize() {
+        addWindowListener(new GameWindowListener());
+    }
+
+    public void showMainMenu() {
+        final CardLayout layout = (CardLayout) screens.getLayout();
+        layout.show(screens, "mainMenu");
+        mainMenu.requestFocusInWindow();
+    }
+
+    public void showOptionsMenu() {
+        final CardLayout layout = (CardLayout) screens.getLayout();
+        layout.show(screens, "optionsMenu");
+        optionsMenu.requestFocusInWindow();
+    }
+
+    public void showGamePanel() {
+        if (isNull(gamePanel)) {
+            createGamePanel();
+        }
+        final CardLayout layout = (CardLayout) screens.getLayout();
+        layout.show(screens, "gamePanel");
+        gamePanel.requestFocusInWindow();
+    }
+
+    private void createGamePanel() {
+        gamePanel = new GamePanel();
+        initializeMouseListeners(gamePanel, List.of(new DefaultMouseListener()));
+        initializeKeyListeners(gamePanel, List.of(new MovementKeyListener(), new GameActionKeyListener(), new MenuKeyListener()));
+        screens.add(gamePanel, "gamePanel");
+    }
+
+    private void initializeKeyListeners(final JPanel panel, final List<KeyListener> listeners) {
+        listeners.forEach(panel::addKeyListener);
+    }
+
+    private void initializeMouseListeners(final JPanel panel, final List<MouseListener> listeners) {
+        listeners.forEach(panel::addMouseListener);
     }
 }

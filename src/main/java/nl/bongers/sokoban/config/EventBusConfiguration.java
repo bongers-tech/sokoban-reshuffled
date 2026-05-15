@@ -9,11 +9,13 @@ public class EventBusConfiguration implements Configuration {
     @Override
     public void processConfiguration() {
         final EventBus eventBus = SimpleEventBus.getBus();
-        eventBus.register(new TogglePanelEventListener());
+        eventBus.register(new MainMenuEventListener());
+        eventBus.register(new NewGameEventListener());
         eventBus.register(new ExitGameEventListener());
         eventBus.register(new MoveEventListener());
         eventBus.register(new GraphicEventListener());
         eventBus.register(new UndoEventListener());
         eventBus.register(new ResetStateEventListener());
+        eventBus.register(new OptionsEventListener());
     }
 }

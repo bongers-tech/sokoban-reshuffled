@@ -27,7 +27,7 @@ public final class SimpleEventBus implements EventBus {
     public void publish(final Event event) {
         subscribableList
                 .stream()
-                .filter(s -> s.subscribedEvents().contains(event.getClass()))
+                .filter(s -> s.subscribedEvent().equals(event.getClass()))
                 .forEach(s -> s.handle(event));
     }
 

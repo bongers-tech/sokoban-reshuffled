@@ -3,12 +3,12 @@ package nl.bongers.sokoban.bus.listener;
 import nl.bongers.sokoban.bus.event.GameActionEvent;
 import nl.bongers.sokoban.bus.model.Event;
 import nl.bongers.sokoban.bus.model.Subscribable;
+import nl.bongers.sokoban.config.GameAction;
 import nl.bongers.sokoban.view.scene.ScenePanel;
 
 import java.awt.event.KeyEvent;
-import java.util.Set;
 
-import static java.awt.event.KeyEvent.VK_R;
+import static nl.bongers.sokoban.config.KeyBindingConfiguration.matches;
 
 public class ResetStateEventListener implements Subscribable {
 
@@ -18,14 +18,14 @@ public class ResetStateEventListener implements Subscribable {
         final ScenePanel scenePanel = gameActionEvent.getScenePanel();
         final KeyEvent keyEvent = gameActionEvent.getKeyEvent();
 
-        if (keyEvent.getKeyCode() == VK_R) {
+        if (matches(GameAction.RESET, keyEvent.getKeyCode())) {
             scenePanel.getGameState().resetState();
             scenePanel.repaint();
         }
     }
 
     @Override
-    public Set<Class<? extends Event>> subscribedEvents() {
-        return Set.of(GameActionEvent.class);
+    public Class<? extends Event> subscribedEvent() {
+        return GameActionEvent.class;
     }
 }

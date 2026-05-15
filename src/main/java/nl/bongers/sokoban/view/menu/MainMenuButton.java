@@ -2,13 +2,13 @@ package nl.bongers.sokoban.view.menu;
 
 import nl.bongers.sokoban.bus.event.ExitGameEvent;
 import nl.bongers.sokoban.bus.event.NewGameEvent;
-import nl.bongers.sokoban.bus.event.PlaceholderEvent;
+import nl.bongers.sokoban.bus.event.OptionsMenuEvent;
 import nl.bongers.sokoban.bus.model.Event;
 
 public enum MainMenuButton {
 
     NEW_GAME("New game", new NewGameEvent()),
-    OPTIONS("Options", new PlaceholderEvent()),
+    OPTIONS("Options", new OptionsMenuEvent()),
     EXIT_GAME("Exit", new ExitGameEvent());
 
     private final String buttonText;
